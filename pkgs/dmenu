@@ -1,0 +1,28 @@
+#!/bin/sh
+
+SRC=$SRCDIR/dmenu
+tmp=$SRC/.dest
+
+deps() {
+	which git || exit 1
+}
+
+fetch() {
+	cd $SRCDIR
+	git clone git://git.suckless.org/dmenu
+	mkdir -p $tmp
+}
+
+build() {
+	cd $SRC
+	make
+}
+
+mkpkg() {
+	cd $SRC
+	DESTDIR=$tmp make install
+	cd $tmp
+	PATH=$PATH:/sbin:/usr/sbin fakerootns makepkg -c n $PKGDIR/dmenu-git.txz
+}
+
+clean() { cat /dev/null; }

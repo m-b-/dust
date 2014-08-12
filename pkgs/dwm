@@ -1,0 +1,29 @@
+#!/bin/sh
+
+SRC=$SRCDIR/dwm
+tmp=$SRC/.dest
+
+deps() {
+	which git || exit 1
+}
+
+fetch() {
+	cd $SRCDIR
+	git clone http://git.suckless.org/dwm
+	mkdir -p $tmp
+}
+
+build() {
+	cd $SRCDIR/dwm
+	cp $FILES/dwm_config.h config.h
+	make
+}
+
+mkpkg() {
+	cd $SRCDIR/dwm
+	DESTDIR=$tmp make install
+	cd $tmp
+	PATH=$PATH:/sbin:/usr/sbin fakerootns makepkg -c n $PKGDIR/dwm-git.txz
+}
+
+clean() { cat /dev/null; }

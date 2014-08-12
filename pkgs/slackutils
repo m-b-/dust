@@ -1,0 +1,29 @@
+#!/bin/sh
+
+SRC=$SRCDIR/slackutils
+tmp=$SRC/.dest
+
+deps() {
+	which git || exit 1
+}
+
+fetch() {
+	cd $SRCDIR
+	git clone https://github.com/heaumer/slackutils.git
+	mkdir -p $tmp
+}
+
+build() {
+	cd $SRC
+	mkdir -p $tmp/usr/sbin
+	cp kerninst mkdirinst slackup xchroot $tmp/usr/sbin
+}
+
+mkpkg() {
+	cd $tmp
+	PATH=$PATH:/sbin/:/usr/sbin fakerootns makepkg $PKGDIR/slackutils-git.txz
+}
+
+clean() {
+	rm -rf $tmp
+}

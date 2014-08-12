@@ -1,0 +1,35 @@
+#!/bin/sh
+
+SRC=$SRCDIR/rxvt-unicode
+tmp=$SRC/.dest
+
+deps() {
+	which cvs || exit 1
+}
+
+fetch() {
+	cd `dirname $SRC`
+	cvs -z3 -d :pserver:anonymous@cvs.schmorp.de/schmorpforge co `basename $SRC`
+	mkdir -p $tmp
+}
+
+build() {
+	cd $SRC
+	./configure --prefix=$tmp \
+		--enable-perl \
+		--enable-mousewheel \
+		--enable-transparency \
+		&& \
+		make && \
+		make install
+}
+
+mkpkg() {
+	cd $tmp
+	PATH=$PATH:/sbin:/usr/sbin fakerootns makepkg -c n $PKGDIR/urxvt-cvs.txz
+}
+
+clean() {
+	cd $SRC && make clean
+	rm -rf $tmp
+}

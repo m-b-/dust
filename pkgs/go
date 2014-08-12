@@ -1,0 +1,20 @@
+#!/bin/sh
+
+deps() {
+	which hg || exit 1
+	which bash || exit 1
+}
+
+fetch() {
+	cd $HOME
+	hg clone -u release https://code.google.com/p/go
+}
+
+build() {
+	cd $HOME/go/src && ./all.bash
+	source $HOME/.bashrc
+	go get code.google.com/p/go.tools/cmd/godoc
+}
+
+mkpkg(){ cat /dev/null; }
+clean(){ cat /dev/null; }

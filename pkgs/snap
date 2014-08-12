@@ -1,0 +1,29 @@
+#!/bin/sh
+
+SRC=$SRCDIR/snap
+tmp=$SRC/.dest
+
+deps() {
+	which git || exit 1
+}
+
+fetch() {
+	cd $SRCDIR
+	git clone https://github.com/heaumer/snap.git
+	mkdir -p $tmp
+}
+
+build() {
+	mkdir -p $tmp/usr/bin
+	cp $SRC/snap $tmp/usr/bin
+	chmod +x $tmp/usr/bin/snap
+}
+
+mkpkg() {
+	cd $tmp
+	PATH=$PATH:/sbin/:/usr/sbin fakerootns makepkg -c n $PKGDIR/snap-git.txz
+}
+
+clean() {
+	rm -rf $tmp
+}

@@ -1,0 +1,32 @@
+#!/bin/sh
+
+SRC=$SRCDIR/qemu
+tmp=$SRC/.dest
+
+deps() {
+	which git || exit 1
+}
+
+fetch() {
+	cd $SRCDIR
+	git clone git://git.qemu-project.org/qemu.git
+}
+
+build() {
+	cd $SRC
+	./configure --prefix=$tmp \
+		--enable-kvm \
+		--target-list=i386-softmmu && \
+		make && \
+		make install
+}
+
+mkpkg() {
+	cd $tmp
+	PATH=$PATH:/sbin:/usr/sbin fakerootns makepkg $PKGDIR/qemu-git.txz
+}
+
+clean() {
+	cd $SRC && make clean
+	rm -rf $tmp
+}

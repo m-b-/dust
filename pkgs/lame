@@ -1,0 +1,30 @@
+#!/bin/sh
+
+SRC=$SRCDIR/lame
+tmp=$SRC/.dest
+
+deps() {
+	which cvs || exit 1
+}
+
+fetch() {
+	cd $SRCDIR
+	cvs -z3 -d:pserver:anonymous@lame.cvs.sourceforge.net:/cvsroot/lame co -P lame
+}
+
+build() {
+	cd $SRC
+	./configure --prefix=$tmp && \
+		make && \
+		make install
+}
+
+mkpkg() {
+	cd $tmp
+	PATH=$PATH:/sbin:/usr/sbin fakerootns makepkg $PKGDIR/lame-cvs.txz
+}
+
+clean() {
+	cd $SRC && make clean
+	rm -rf $tmp
+}

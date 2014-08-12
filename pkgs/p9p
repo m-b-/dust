@@ -1,0 +1,19 @@
+#!/bin/sh
+
+deps() {
+	which hg || exit 1
+}
+
+fetch() {
+	# ignore $SRCDIR
+	cd $HOME
+	hg clone http://code.swtch.com/plan9port plan9
+}
+
+build() {
+	cd $HOME/plan9
+	./INSTALL
+}
+
+mkpkg() { cat /dev/null; }
+clean() { cat /dev/null; }

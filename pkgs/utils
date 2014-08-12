@@ -1,0 +1,34 @@
+#!/bin/sh
+
+SRC=$SRCDIR/utils
+tmp=$SRC/.dest
+cprogs="ucol.c serve.c npipe.c fakerootns.c"
+
+deps() {
+	which git || exit 1
+}
+
+fetch() {
+	cd $SRCDIR
+	git clone https://github.com/heaumer/utils.git
+	mkdir -p $tmp/usr/bin
+	mkdir -p $tmp/usr/local/bin
+}
+
+build() {
+	cd $SRC
+	for i in $cprogs; do
+		cc $i -o `basename $i .c` -lpthread && \
+		mv `basename $i .c` $tmp/usr/bin
+	done
+	cp sh/* $tmp/usr/local/bin
+}
+
+mkpkg() {
+	cd $tmp
+	PATH=$PATH:/sbin/:/usr/sbin fakerootns makepkg $PKGDIR/utils-git.txz
+}
+
+clean() {
+	rm -rf $tmp
+}
