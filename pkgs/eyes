@@ -1,0 +1,32 @@
+#!/bin/sh
+
+SRC=$SRCDIR/eyes
+tmp=$SRC/.dest
+
+deps() {
+	which git || exit 1
+}
+
+fetch() {
+	cd $SRCDIR
+	git clone https://github.com/heaumer/eyes.git
+	mkdir -p $tmp/usr/bin
+	mkdir -p $tmp/usr/share/man/man8
+}
+
+build() {
+	cd $SRC
+	mkdir -p $tmp/usr/sbin
+	cc -o eyes eyes.c
+	cp eyes $tmp/usr/bin
+	cp eyes.8 $tmp/usr/share/man/man8
+}
+
+mkpkg() {
+	cd $tmp
+	PATH=$PATH:/sbin/:/usr/sbin fakerootns makepkg $PKGDIR/eyes-git.txz
+}
+
+clean() {
+	rm -rf $tmp
+}

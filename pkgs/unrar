@@ -1,0 +1,33 @@
+#!/bin/sh
+
+SRC=$SRCDIR/unrar
+tmp=$SRC/.dest
+
+deps() {
+	which wget || exit 1
+	which g++  || exit 1
+}
+
+fetch() {
+	cd $SRCDIR
+	wget 'http://www.rarlab.com/rar/unrarsrc-5.1.7.tar.gz'
+	tar zxvf unrarsrc-*
+	rm unrarsrc*.tar.gz
+	mkdir -p $tmp
+}
+
+build() {
+	cd $SRCDIR/unrar
+	# Set DESTDIR to $tmp
+	sed -i 's,^DESTDIR.*,DESTDIR=./.dest/,' makefile
+	make
+}
+
+mkpkg() {
+	cd $SRCDIR/unrar
+	make install
+	cd $tmp
+	PATH=$PATH:/sbin:/usr/sbin fakerootns makepkg -c n $PKGDIR/unrar-5.1.7.txz
+}
+
+clean() { cat /dev/null; }
