@@ -67,9 +67,12 @@ alias ds='du -sh'
 alias dh='df -h'
 alias lh='/usr/bin/ls -lh'
 alias ll='/usr/bin/ls -l'
+alias ..='cd ..'
+alias ...='cd ../..'
 
 alias gst='git status'
 alias ga='git add'
+alias gd='PAGER=most git diff'
 
 #alias vbox='/opt/VirtualBox/VirtualBox'
 
