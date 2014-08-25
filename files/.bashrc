@@ -81,6 +81,8 @@ alias gst='git status'
 alias ga='git add'
 alias gd='PAGER=most git diff'
 
+alias ssh-services='ssh -p 25022 admin@awesom.eu'
+
 #alias vbox='/opt/VirtualBox/VirtualBox'
 
 ## Do erase word with ^W
