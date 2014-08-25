@@ -62,6 +62,13 @@ cd() {
 	[ "$winid" != "" ] && awd
 }
 
+# random line from a file
+rl() {
+	# cat |wc to avoid filtering out name
+	n=$(echo $RANDOM % `cat $1 | wc -l` + 1 | bc)
+	sed -n ${n}p $1
+}
+
 ## aliases
 alias ds='du -sh'
 alias dh='df -h'
