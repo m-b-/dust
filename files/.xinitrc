@@ -23,4 +23,9 @@ p=$!
 sleep 3
 dwm_status&
 
+while true; do
+	randbg $HOME/imgs/
+	sleep 1800 # 30min
+done &
+
 wait $p

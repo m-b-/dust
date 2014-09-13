@@ -62,6 +62,7 @@ cd() {
 	[ "$winid" != "" ] && awd
 }
 
+## random stuff
 # random line from a file
 randl() {
 	# cat |wc to avoid filtering out name
@@ -73,6 +74,11 @@ randl() {
 randf() {
 	n=$(echo $RANDOM % `ls $1 | wc -l` + 1 | bc)
 	ls $1 | sed -n ${n}p
+}
+
+# Set random background image from $1 using xv(1) (see .xinitrc)
+randbg() {
+	cd $1; xv -root `randf $1` -rmode 5 -quit; cd -
 }
 
 ## aliases
@@ -96,3 +102,4 @@ bind '\C-w:backward-kill-word'
 
 # For ^L in both tmux (TERM=screen) and urxvt (TERM=urxvt-unicode)
 TERM=xterm-color
+
