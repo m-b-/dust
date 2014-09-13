@@ -63,10 +63,16 @@ cd() {
 }
 
 # random line from a file
-rl() {
+randl() {
 	# cat |wc to avoid filtering out name
 	n=$(echo $RANDOM % `cat $1 | wc -l` + 1 | bc)
 	sed -n ${n}p $1
+}
+
+# random file from directory
+randf() {
+	n=$(echo $RANDOM % `ls $1 | wc -l` + 1 | bc)
+	ls $1 | sed -n ${n}p
 }
 
 ## aliases
@@ -88,3 +94,5 @@ alias ssh-services='ssh -p 25022 admin@awesom.eu'
 ## Do erase word with ^W
 bind '\C-w:backward-kill-word'
 
+# For ^L in both tmux (TERM=screen) and urxvt (TERM=urxvt-unicode)
+TERM=xterm-color
