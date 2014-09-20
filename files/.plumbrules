@@ -25,7 +25,7 @@ plumb   start   rc -c 'plumb `{ echo '$0' }'
 
 # open directory within acme
 type    is      text
-arg     isdir   $0
+arg     isdir   $data
 plumb	to	edit
 plumb	client	$editor
 
