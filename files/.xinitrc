@@ -9,6 +9,7 @@ PATH=$PATH:$HOME/plan9/bin/:$HOME/bin
 
 # launch the plumber
 9 plumber
+9p write plumb/rules < .plumbrules
 
 # launch urxvtd if needed
 ( ps aux | grep urxvtd | grep -v grep ) || urxvtd -q -f -o
