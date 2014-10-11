@@ -42,8 +42,16 @@ WM=`which dwm`
 export WM
 
 ## PS1
-PS1="($(hostname))% "
+# PS1="($(hostname))% "
+# Prompt is valid bash
+PS1="($(hostname)); "
+eval "`hostname`() { cat /dev/null; }"
 export PS1
+
+## PAGER
+PAGER=less
+which most &>/dev/null && PAGER="most"
+export PAGER
 
 ## convert to mp3
 tomp3() {
@@ -54,13 +62,15 @@ tomp3() {
 
 ## cd for p9p
 cd() {
-	if [ "$1" == "" ]; then
-		builtin cd $HOME
-	else
-		builtin cd "$*"
-	fi
+	[ "$1" == "" ] && set -- "$HOME"
+	builtin cd "$*"; r=$?
+	# if running in win(1), update title
 	[ "$winid" != "" ] && awd
+	return $r
 }
+
+## cd followed by a ls
+cl() { cd $* && ls; }
 
 ## random stuff
 # random line from a file
@@ -91,7 +101,7 @@ alias ...='cd ../..'
 
 alias gst='git status'
 alias ga='git add'
-alias gd='PAGER=most git diff'
+alias gd='git diff'
 
 alias ssh-services='ssh -p 25022 admin@awesom.eu'
 
