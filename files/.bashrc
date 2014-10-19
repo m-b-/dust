@@ -41,6 +41,10 @@ export MANPATH
 WM=`which dwm`
 export WM
 
+## Browser (9 web/plumber)
+BROWSER=firefox
+export BROWSER
+
 ## PS1
 # PS1="($(hostname))% "
 # Prompt is valid bash
@@ -70,7 +74,7 @@ cd() {
 }
 
 ## cd followed by a ls
-cl() { cd $* && ls; }
+,() { cd $* && ls; }
 
 ## random stuff
 # random line from a file
