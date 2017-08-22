@@ -346,6 +346,13 @@ noremap <silent> <M-S> <esc>:bn<CR>
 "noremap <silent> <C-MouseUp>   <esc>:bn<CR>
 "noremap <silent> <C-MouseDown> <esc>:bp<CR>
 
+" --------------
+" Buffer closing
+" --------------
+
+" , is mapped to : so this mimics :bdd.
+command! DD :bp\|bd #<CR>
+
 " -------------
 " Tab movements
 " -------------
@@ -373,6 +380,22 @@ if has("autocmd") && executable("figlet") && executable("box")
         \ noremap <silent> <C-b> <esc>V:!box\|sed 's/^/" /'<CR>
 endif
 
+" -----
+" Paste
+" -----
+
+" By default when hitting p over something, the something will be set into the
+" default register. This will send it to the blackhole register, so we can keep
+" it.
+vnoremap <leader>p "_dP
+
+" -------
+" Quoting
+" -------
+
+noremap qw' <esc>bi'<esc>ea'<esc>
+noremap qw" <esc>bi"<esc>ea"<esc>
+
 "  ____           _            _   _   _
 " |  _ \ ___ _ __| |  ___  ___| |_| |_(_)_ __   __ _ ___
 " | |_) / _ \ '__| | / __|/ _ \ __| __| | '_ \ / _` / __|
@@ -380,10 +403,10 @@ endif
 " |_|   \___|_|  |_| |___/\___|\__|\__|_|_| |_|\__, |___/
 "                                              |___/
 
-" Most of the time, we want Template Tookit files to be highlighted as HTML.
-au BufNewFile,BufRead *.tt setlocal ft=html
-
 if has("autocmd")
+    " Most of the time, we want Template Tookit files to be highlighted as HTML.
+    au BufNewFile,BufRead *.tt setlocal ft=html
+
     " Consider ':' as a word separator (mainly for Perl::Modules).
     " Its is however temporarily override for ctags so we can look
     " for Foo::Bar::baz().
@@ -427,6 +450,19 @@ if has("autocmd")
         \ noremap <silent> <C-f> <esc>V:!figlet\|sed 's/^/\/\/ /;s/\s\+$//'<CR>|
         \ noremap <silent> <C-b> <esc>V:!box\|sed 's/^/\/\/ /'<CR>|
         \ setlocal textwidth=80
+endif
+
+"  ____  _          _ _            _   _   _
+" / ___|| |__   ___| | |  ___  ___| |_| |_(_)_ __   __ _ ___
+" \___ \| '_ \ / _ \ | | / __|/ _ \ __| __| | '_ \ / _` / __|
+"  ___) | | | |  __/ | | \__ \  __/ |_| |_| | | | | (_| \__ \
+" |____/|_| |_|\___|_|_| |___/\___|\__|\__|_|_| |_|\__, |___/
+"                                                  |___/
+
+if has("autocmd")
+    autocmd FileType sh
+        \ noremap <silent> <C-f> <esc>V:!figlet\|sed 's/^/\# /;s/\s\+$//'<CR>|
+        \ noremap <silent> <C-b> <esc>V:!box\|sed 's/^/\# /'<CR>
 endif
 
 "  _____                          _   _   _
@@ -484,3 +520,25 @@ set statusline+=%=
 " And display current position in the file
 set statusline+=%04l,%03v\ \ \ \ %P
 
+"     _         _                    _       _ _       ____
+"    / \  _   _| |_ ___    _ __ ___ | | ____| (_)_ __ / /\ \
+"   / _ \| | | | __/ _ \  | '_ ` _ \| |/ / _` | | '__| |  | |
+"  / ___ \ |_| | || (_) | | | | | | |   < (_| | | |  | |  | |
+" /_/   \_\__,_|\__\___/  |_| |_| |_|_|\_\__,_|_|_|  | |  | |
+"                                                     \_\/_/
+
+" Automatically call mkdir -p when saving a file when parent directory doesn't
+" exists.
+" Taken from: https://stackoverflow.com/a/4294176
+function s:MkNonExDir(file, buf)
+    if empty(getbufvar(a:buf, '&buftype')) && a:file!~#'\v^\w+\:\/'
+        let dir=fnamemodify(a:file, ':h')
+        if !isdirectory(dir)
+            call mkdir(dir, 'p')
+        endif
+    endif
+endfunction
+augroup BWCCreateDir
+    autocmd!
+    autocmd BufWritePre * :call s:MkNonExDir(expand('<afile>'), +expand('<abuf>'))
+augroup END
